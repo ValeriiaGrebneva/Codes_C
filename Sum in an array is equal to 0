@@ -1,0 +1,43 @@
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<int> nums_sort = nums;
+        std::sort(nums_sort.begin(),nums_sort.end());
+        for (int i = 0; i < nums_sort.size() - 3; i++){
+            if (nums_sort[i] == 0){
+                if (i < nums_sort.size() - 3 && nums_sort[i] == nums_sort[i + 3]){
+                    nums_sort.erase(nums_sort.begin() + i);
+                }
+                continue;
+            }
+            while (nums_sort[i] == nums_sort[i + 2] && i < nums_sort.size() - 3){
+                nums_sort.erase(nums_sort.begin() + i);
+            }
+        }
+        vector<vector<int>> answ;
+        int nsize = nums_sort.size();
+        for (int i = 0; i < nsize; i++){
+            int n = nsize - 1;
+            int j = i + 1;
+            while(n > j){
+                if (nums_sort[i] + nums_sort[j] + nums_sort[n] > 0){
+                    n--;       
+                }
+                else if (nums_sort[i] + nums_sort[j] + nums_sort[n] == 0){
+                    answ.push_back({nums_sort[i], nums_sort[j], nums_sort[n]});
+                    while(j < nsize - 1 && nums_sort[j] == nums_sort[j + 1] ){
+                        j++;
+                    }
+                    j++;
+                }
+                else{
+                    j++;
+                }
+            }
+            while(i < nsize - 1 && nums_sort[i] == nums_sort[i + 1] ){
+                i++;
+            }
+        }
+        return (answ);
+    }
+};
