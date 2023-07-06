@@ -1,0 +1,87 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* p = l1;
+        ListNode* q = l2;
+        vector<int> v;
+        int number;
+        int whole = 0;
+        while (p != NULL && q != NULL){
+            number = p -> val + q -> val + whole;
+            v.insert(v.begin(), number % 10);
+            whole = number / 10;
+            p = p -> next;
+            q = q -> next;
+        }
+        while (p != NULL){
+            number = p -> val + whole;
+            v.insert(v.begin(), number % 10);
+            whole = number / 10;
+            p = p -> next;
+        }
+        while (q != NULL){
+            number = q -> val + whole;
+            v.insert(v.begin(), number % 10);
+            whole = number / 10;
+            q = q -> next;
+        }
+        if (whole == 1) v.insert(v.begin(), 1);
+        ListNode* s = new ListNode(v[0]);
+        int size = v.size();
+        for (int j = 1; j < size; j++){
+            s = new ListNode(v[j], s);
+        }
+        return s;
+    }
+};
+
+
+
+
+
+
+//DOESN'T WORK WITH BIG LISTS
+class Solution {
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* p = l1;
+        ListNode* q = l2;
+        int i = 0;
+        int power = 0;
+        while (p != NULL && q != NULL){
+            i = i + (p -> val + q -> val) * pow(10, power);
+            power += 1;
+            p = p -> next;
+            q = q -> next;
+        }
+        while (p != NULL){
+            i = i + p -> val * pow(10, power);
+            power += 1;
+            p = p -> next;
+        }
+        while (q != NULL){
+            i = i + q -> val * pow(10, power);
+            power += 1;
+            q = q -> next;
+        }
+        if (floor(i / pow(10, power)) == 0) power -= 1;
+        ListNode* s = new ListNode(floor(i / pow(10, power)));
+        while (power != -1){
+            i = i - floor(i / pow(10, power)) * pow(10, power);
+            if (power != 0) s = new ListNode(floor(i / pow(10, power-1)), s);
+            power -= 1;
+        }
+        return s;
+    }
+};
