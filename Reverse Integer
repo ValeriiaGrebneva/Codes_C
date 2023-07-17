@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int reverse(int x) {
+        if (x == 0) return 0;
+        int sign = 1;
+        if (x < 0) {
+            sign = -1;
+            if (x == -2147483648) return 0;
+            x = -x;
+        }
+        int power = 1;
+        int rest = x % int(pow(10, power));
+        vector<int> nums_10 = {rest / int(pow(10, power - 1))};
+        x = x - rest;
+        while (x != 0 && power != 9) {
+            power++;
+            rest = x % int(pow(10, power));
+            x = x - rest;
+            nums_10.push_back(rest / int(pow(10, power - 1)));
+        }
+        if (x != 0) {
+            nums_10.push_back(x / pow(10,9));
+            x = 0;
+            power++;
+        }
+        int range_up = int(pow(2, 31) - 1);
+        int po = power;
+        if(po == 10){
+            for (int i = 0; i < nums_10.size(); i++){
+                if (sign == 1 && fmod(int(range_up / pow(10, po-1)), 10) < nums_10[i]) return 0;
+                if (sign == 1 && fmod(int(range_up / pow(10, po-1)), 10) > nums_10[i]) break;
+                if (sign == -1 && fmod(int(range_up / pow(10, po-1)), 10) + fmod(int(1/pow(10, po - 1)), 10) < nums_10[i]) return 0;
+                if (sign == -1 && fmod(int(range_up / pow(10, po-1)), 10) + fmod(int(1/pow(10, po - 1)), 10) > nums_10[i]) break;
+                po--;
+            }
+        }
+        int i = 0;
+        while (power > 0) {
+            x = x + nums_10[i] * pow(10, power - 1);
+            i++;
+            power--;
+        }
+        return x * sign;
+    }
+};
